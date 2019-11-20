@@ -6,7 +6,7 @@ unsigned long timeSet()
   {
     while(digitalRead(temp) == LOW);
     limitador++;
-    if(limitador <= 6)
+    if(limitador <= 4)
     {
       timeset = timeset + 50;
       return timeset;

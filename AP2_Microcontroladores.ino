@@ -5,11 +5,12 @@ int onoff = 8, temp = 9, pir = 10, ir = 3, seg = 0, minute = 0, hora = 0, LDRpin
 unsigned long segacum = 0;
 unsigned long timeset = 0;
 bool flag = false;
+
 void setup() 
 {
-  pinMode(onoff = INPUT_PULLUP);
-  pinMode(temp = INPUT_PULLUP);
-  pinMode(pir = INPUT);
+  pinMode(onoff,INPUT_PULLUP);
+  pinMode(temp,INPUT_PULLUP);
+  pinMode(pir,INPUT);
 }
 
 void loop()
@@ -17,7 +18,7 @@ void loop()
   if(digitalRead(onoff) == LOW)
   {
     while(digitalRead(onoff) == LOW);
-    flag = true;
+    flag = !flag;
     control('o');
   }
   while(flag == 1)

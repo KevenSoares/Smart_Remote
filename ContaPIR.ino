@@ -2,7 +2,7 @@ int contaLDR()
 {
   do
   {
-   if(flag && digitalRead(pinPir) == LOW)
+   if(flag && digitalRead(pir) == LOW)
    {
     unsigned long tempoPIR = millis();
     int segPIR = 0;
