@@ -41,6 +41,7 @@ void setup() // inicializações do sistema
   lcd.print(" ON/OFF: START  ");
   lcd.setCursor(0,1);
   lcd.print(" TIME: Inc Time ");
+  Serial.begin(9600);
 }
 
 void loop()
@@ -58,8 +59,11 @@ void loop()
     contaTempo(); // chama a função de contagem de tempo
     if(contaTempo() >= timeset*50 || digitalRead(onoff) == LOW|| segPIR >=20 || segLDR >= 20 || flag == false) // e verifica os tempos de aula, os tempos de sensor de presença, LDR ou se o botao ON/OFF foi pressionado novamente
     {
-      control('s'); // caso alguma das condições seja atendida, manda o comando de desliga
-      resetFunc();  // e reinicia o arduino
+      Serial.print("off");
+      control('a'); // caso alguma das condições seja atendida, manda o comando de desliga
+      delay(1000);
+      flag = false;
+      //resetFunc();  // e reinicia o arduino
     }
   }
 }
