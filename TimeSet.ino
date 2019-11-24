@@ -1,19 +1,8 @@
-unsigned long timeSet()
+void timeSet() // função chamada caso a interrupção do botão de TIME seja ativada
 {
-  int limitador = 0;
-  timeset = 50;
-  if(digitalRead(temp) == LOW)
-  {
-    while(digitalRead(temp) == LOW);
-    limitador++;
-    if(limitador <= 4)
-    {
-      timeset = timeset + 50;
-      return timeset;
-    }
-  }
+  while(digitalRead(2)== LOW); //debounce do botão
+  if(timeset >= 6) // limitador de quantidade de tempo
+   timeset = 2;
   else
-  {
-   return timeset;
-  }
+   timeset++;
 }

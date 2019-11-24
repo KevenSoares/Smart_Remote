@@ -1,35 +1,63 @@
 /* Avaliação Parcial 2
  *  Autores: Keven Soares, Mauricio Calheiro
  */
-int onoff = 8, temp = 9, pir = 10, ir = 3, seg = 0, minute = 0, hora = 0, LDRpin = A0;
-unsigned long segacum = 0;
-unsigned long timeset = 0;
-bool flag = false;
+/*
+ * Inclusão de bibliotecas necessárias para a implementação do projeto
+ */
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <IRremote.h>
 
-void setup() 
+
+LiquidCrystal_I2C lcd(0x3F,2,1,0,4,5,6,7,3, POSITIVE); // Foi utilizado um display LCD I2C
+
+int onoff = 8, ir = 3, seg = 0, segLDR = 0, segPIR = 0;
+
+unsigned long segacum = 0; // variável que acumula valor em segundos do projeto
+int timeset = 2;           // variável que acumula quantidade de tempos de aula que o ar permanece ligado
+bool flag = false;         // variável que guarda o estado de ativação do ar
+
+void(* resetFunc) (void) = 0; // função de software reset do arduino
+
+void setup() // inicializações do sistema
 {
-  pinMode(onoff,INPUT_PULLUP);
-  pinMode(temp,INPUT_PULLUP);
-  pinMode(pir,INPUT);
+  pinMode(onoff,INPUT_PULLUP); // inicialização do botão de ON/OFF
+  
+  pinMode(2,INPUT_PULLUP);     // o botão de incrementar quantidade de tempo foi feito via interrupção
+  attachInterrupt(digitalPinToInterrupt(2), timeSet, LOW);
+  
+  pinMode(7,INPUT);           //Sensor de presença
+  
+  lcd.begin (16,2);           //Inicialização do LCD
+  lcd.setBacklight(HIGH);
+  lcd.setCursor(0,0);
+  lcd.print("  Init System   ");
+  delay(1000);
+  lcd.setCursor(0,0);
+  lcd.print("    Bem Vindo   ");
+  lcd.setCursor(0,0);
+  lcd.print(" ON/OFF: START  ");
+  lcd.setCursor(0,1);
+  lcd.print(" TIME: Inc Time ");
 }
 
 void loop()
 {
-  if(digitalRead(onoff) == LOW)
+  if(digitalRead(onoff) == LOW)       // caso o botão de ON/OFF seja pressionado
   {
-    while(digitalRead(onoff) == LOW);
-    flag = !flag;
-    control('o');
+    while(digitalRead(onoff) == LOW); //debounce do botão
+    flag = !flag;                     //inverte e flag 
+    control('w');                     // comando de ligar o ar
   }
-  while(flag == 1)
+  while(flag)                        // enquanto ele estiver ligado
   {
-    contaTempo();
-    timeSet();
-    if(contaPir() >= 20 || contaLDR() >= 20 || contaTempo() >= timeset || digitalRead(onoff) == LOW)
+    lcd.setCursor(0,0);
+    lcd.print("Ar Ligado  ");
+    contaTempo(); // chama a função de contagem de tempo
+    if(contaTempo() >= timeset*50 || digitalRead(onoff) == LOW|| segPIR >=20 || segLDR >= 20 || flag == false) // e verifica os tempos de aula, os tempos de sensor de presença, LDR ou se o botao ON/OFF foi pressionado novamente
     {
-      control('c');
-      flag = false;
-      segacum = 0;
+      control('s'); // caso alguma das condições seja atendida, manda o comando de desliga
+      resetFunc();  // e reinicia o arduino
     }
   }
 }
