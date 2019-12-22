@@ -1,5 +1,5 @@
 /* Avaliação Parcial 2
- *  Autores: Keven Soares, Mauricio Calheiro
+ *  Autores:Ester de Carvalho,Igor Benayon, Keven Soares, Mauricio Calheiro, Monique Silva, Renan Castiel 
  */
 /*
  * Inclusão de bibliotecas necessárias para a implementação do projeto
@@ -63,7 +63,7 @@ void loop()
       control('a'); // caso alguma das condições seja atendida, manda o comando de desliga
       delay(1000);
       flag = false;
-      //resetFunc();  // e reinicia o arduino
+      resetFunc();  // e reinicia o arduino
     }
   }
 }
