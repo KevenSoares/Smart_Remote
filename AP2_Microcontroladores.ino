@@ -1,5 +1,5 @@
 /* Avaliação Parcial 2
- *  Autores: Keven Soares, Mauricio Calheiro
+ *  Autores:Ester de Carvalho,Igor Benayon, Keven Soares, Mauricio Calheiro, Monique Silva, Renan Castiel 
  */
 /*
  * Inclusão de bibliotecas necessárias para a implementação do projeto
@@ -7,23 +7,22 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <IRremote.h>
-#include <IRremote.h>
 
 IRsend irsend;
 
 LiquidCrystal_I2C lcd(0x3F,2,1,0,4,5,6,7,3, POSITIVE); // Foi utilizado um display LCD I2C
 
-int onoff = 8, ir = 3, seg = 0, segLDR = 0, segPIR = 0;
+int segLDR = 0, segPIR = 0;
 
-unsigned long segacum = 0; // variável que acumula valor em segundos do projeto
-int timeset = 2;           // variável que acumula quantidade de tempos de aula que o ar permanece ligado
+
+short timeset = 2;           // variável que acumula quantidade de tempos de aula que o ar permanece ligado
 bool flag = false;         // variável que guarda o estado de ativação do ar
 
 void(* resetFunc) (void) = 0; // função de software reset do arduino
 
 void setup() // inicializações do sistema
 {
-  pinMode(onoff,INPUT_PULLUP); // inicialização do botão de ON/OFF
+  pinMode(8,INPUT_PULLUP); // inicialização do botão de ON/OFF
   
   pinMode(2,INPUT_PULLUP);     // o botão de incrementar quantidade de tempo foi feito via interrupção
   attachInterrupt(digitalPinToInterrupt(2), timeSet, LOW);
@@ -46,9 +45,9 @@ void setup() // inicializações do sistema
 
 void loop()
 {
-  if(digitalRead(onoff) == LOW)       // caso o botão de ON/OFF seja pressionado
+  if(digitalRead(8) == LOW)       // caso o botão de ON/OFF seja pressionado
   {
-    while(digitalRead(onoff) == LOW); //debounce do botão
+    while(digitalRead(8) == LOW); //debounce do botão
     flag = !flag;                     //inverte e flag 
     control('w');                     // comando de ligar o ar
   }
@@ -57,13 +56,13 @@ void loop()
     lcd.setCursor(0,0);
     lcd.print("Ar Ligado  ");
     contaTempo(); // chama a função de contagem de tempo
-    if(contaTempo() >= timeset*50 || digitalRead(onoff) == LOW|| segPIR >=20 || segLDR >= 20 || flag == false) // e verifica os tempos de aula, os tempos de sensor de presença, LDR ou se o botao ON/OFF foi pressionado novamente
+    if(contaTempo() >= timeset*50 || digitalRead(8) == LOW|| segPIR >=20 || segLDR >= 20 || flag == false) // e verifica os tempos de aula, os tempos de sensor de presença, LDR ou se o botao ON/OFF foi pressionado novamente
     {
       Serial.print("off");
-      control('a'); // caso alguma das condições seja atendida, manda o comando de desliga
+      control('s'); // caso alguma das condições seja atendida, manda o comando de desliga
       delay(1000);
       flag = false;
-      //resetFunc();  // e reinicia o arduino
+      resetFunc();  // e reinicia o arduino
     }
   }
 }

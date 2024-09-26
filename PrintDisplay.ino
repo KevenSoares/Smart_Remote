@@ -7,7 +7,7 @@ void printDisplay()
         lcd.setCursor(0,1);
         lcd.print("TA:");
         lcd.setCursor(3,1);
-        lcd.print(ArrumaZero(segacum));
+        lcd.print(ArrumaZero(contaTempo()));
         lcd.setCursor(6,1);
         lcd.print("LX:");
         lcd.setCursor(9,1);

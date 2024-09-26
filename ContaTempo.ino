@@ -1,6 +1,7 @@
-unsigned long contaTempo() // função de contagem de tempo, dependente da função millis
+int contaTempo() // função de contagem de tempo, dependente da função millis
 { 
   unsigned long tempo = millis();
+  int segacum = 0; // variável que acumula valor em segundos do projeto
   int j = 1;
   while(j)
   {
@@ -23,9 +24,9 @@ unsigned long contaTempo() // função de contagem de tempo, dependente da funç
         {
           segPIR = 0;
         }
-        if(digitalRead(onoff) == LOW) // verifica o botão ON/OFF
+        if(digitalRead(8) == LOW) // verifica o botão ON/OFF
         {
-         while(digitalRead(onoff) == LOW);
+         while(digitalRead(8) == LOW);
          flag = !flag;
         }
         segacum++; // incrementa o segundo
